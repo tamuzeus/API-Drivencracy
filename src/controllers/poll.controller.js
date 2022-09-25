@@ -68,7 +68,7 @@ async function pollGetChoice(req, res) {
     const { id } = req.params
 
     try {
-        const research = await db.collection('poll').findOne({ _id: ObjectId(id) })
+        const research = await db.collection('poll').findOne({ _id: new ObjectId(id) })
 
         if (!research) {
             res.status(404).send('Poll not find')

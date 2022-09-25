@@ -58,20 +58,20 @@ async function choicePost(req, res) {
 }
 
 async function choicevotePost(req, res) {
+
     const { id } = req.params
 
     try {
-        const existsId = await db.collection('choice').findOne({ _id: new ObjectId(id) })
-        const research = await db.collection('poll').findOne({ _id: new ObjectId(id) })
+        const research = await db.collection('choice').findOne({ _id: new ObjectId(id) })
 
-        console.log(existsId)
-
-        if (!existsId) {
+        if (!research) {
             res.status(404).send('Option not find')
             return
         }
 
-        if (research.expireAt <= dayjs().format('YYYY-MM-DD HH:mm')) {
+        const confirmPoll = await db.collection('poll').findOne({ _id: new ObjectId(research.pollId) })
+
+        if (confirmPoll.expireAt <= dayjs().format('YYYY-MM-DD HH:mm')) {
             res.sendStatus(403)
             return
         }
@@ -81,11 +81,12 @@ async function choicevotePost(req, res) {
             choiceId: ObjectId(id)
         });
 
-        res.status(201).send('Votado')
+        res.sendStatus(201)
+
     } catch (error) {
         res.status(500).send(error.message);
     }
-}
 
+}
 
 export { choicePost, choicevotePost };
