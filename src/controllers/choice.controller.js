@@ -49,9 +49,7 @@ async function choicePost(req, res) {
             }
         );
 
-
-
-        res.status(201).send(`Voto criado com sucesso`);
+        res.status(201).send(`Choice criado com sucesso`);
     } catch (error) {
         res.status(500).send(error.message);
     }

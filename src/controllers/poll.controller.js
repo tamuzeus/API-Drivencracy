@@ -83,8 +83,30 @@ async function pollGetChoice(req, res) {
 }
 
 async function pollResults(req, res) {
+    const { id } = req.params
+
     try {
-        
+        const poll = await db.collection('poll').findOne({ _id: ObjectId(id) })
+        const choice = await db.collection('choice').find({ pollId: ObjectId(id) }).toArray()
+
+        let indexmostVotes = 0
+        let mostVotes = 0
+        const votes = await Promise.all (choice.map(async element => {
+            const elemvotes = await db.collection('votes').find({ choiceId: element._id }).toArray()
+            return {
+                title: element.title,
+                votes: elemvotes.length
+            }
+        }));
+
+        votes.forEach((element, index) => {
+            if (element.votes > mostVotes) {
+                mostVotes = element.votes
+                indexmostVotes = index
+            }
+        });
+
+        res.send({ ...poll, result: votes[indexmostVotes] })
 
     } catch (error) {
         res.sendStatus(500);
