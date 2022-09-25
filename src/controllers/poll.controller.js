@@ -74,7 +74,7 @@ async function pollGetChoice(req, res) {
             res.status(404).send('Poll not find')
             return
         }
-        const response = await db.collection('choice').find({pollId: id}).toArray()
+        const response = await db.collection('choice').find({ pollId: id }).toArray()
         res.send(response)
 
     } catch (error) {
@@ -82,4 +82,14 @@ async function pollGetChoice(req, res) {
     }
 }
 
-export { pollPost, pollGet, pollGetChoice };
+async function pollResults(req, res) {
+    try {
+        
+
+    } catch (error) {
+        res.sendStatus(500);
+        console.log(error)
+    }
+}
+
+export { pollPost, pollGet, pollGetChoice, pollResults };

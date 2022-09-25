@@ -63,6 +63,8 @@ async function choicevotePost(req, res) {
 
     try {
         const research = await db.collection('choice').findOne({ _id: new ObjectId(id) })
+        const findId = await db.collection('choice').find().toArray()
+        console.log(research) //_id que será utilizado para por o voto e não o pollid
 
         if (!research) {
             res.status(404).send('Option not find')
@@ -86,7 +88,6 @@ async function choicevotePost(req, res) {
     } catch (error) {
         res.status(500).send(error.message);
     }
-
 }
 
 export { choicePost, choicevotePost };
