@@ -15,6 +15,6 @@ try {
 }
 
 let db;
-db = mongoClient.db('Teste');
+db = mongoClient.db('APIDrivencracy');
 
 export { db };
