@@ -16,7 +16,6 @@ const repeat = async (title) => {
 async function choicePost(req, res) {
     const { title, pollId } = req.body
     const research = await db.collection('poll').findOne({ _id: ObjectId(pollId) })
-    const tst = await db.collection('choice').find().toArray()
 
     try {
 
@@ -50,7 +49,7 @@ async function choicePost(req, res) {
             }
         );
 
-        console.log(tst)
+
 
         res.status(201).send(`Voto criado com sucesso`);
     } catch (error) {
@@ -62,8 +61,10 @@ async function choicevotePost(req, res) {
     const { id } = req.params
 
     try {
-        const existsId = await db.collection('choice').findOne({ _id: ObjectId(id) })
-        const research = await db.collection('poll').findOne({ _id: ObjectId(pollId) })
+        const existsId = await db.collection('choice').findOne({ _id: new ObjectId(id) })
+        const research = await db.collection('poll').findOne({ _id: new ObjectId(id) })
+
+        console.log(existsId)
 
         if (!existsId) {
             res.status(404).send('Option not find')
@@ -80,6 +81,7 @@ async function choicevotePost(req, res) {
             choiceId: ObjectId(id)
         });
 
+        res.status(201).send('Votado')
     } catch (error) {
         res.status(500).send(error.message);
     }
