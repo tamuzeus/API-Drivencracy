@@ -98,6 +98,7 @@ async function pollResults(req, res) {
                 votes: elemvotes.length
             }
         }));
+        console.log(votes)
 
         votes.forEach((element, index) => {
             if (element.votes > mostVotes) {
