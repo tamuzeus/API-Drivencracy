@@ -4,6 +4,7 @@ import DateExtension from "@joi/date"
 import JoiImport from 'joi';
 import { db } from '../database/db.js'
 import dayjs from 'dayjs';
+import { ObjectId } from 'mongodb';
 
 const Joi = JoiImport.extend(DateExtension)
 
@@ -18,24 +19,24 @@ async function pollPost(req, res) {
     let { title, expireAt } = req.body
 
     try {
-        
+
         const validation = pollSchema.validate(req.body, { abortEarly: false })
 
         if (validation.error) {
             const erros = validation.error.details.map(detail => detail.message);
 
             res.status(422).send(erros);
-            return 
+            return
         }
 
-        if(expireAt === null || expireAt === " " || !expireAt){
+        if (expireAt === null || expireAt === " " || !expireAt) {
             const response = await db.collection('poll').insertOne(
                 {
                     title,
                     expireAt: newexpireAt
                 }
             )
-        }else{
+        } else {
             const response = await db.collection('poll').insertOne(
                 {
                     title,
@@ -63,4 +64,22 @@ async function pollGet(req, res) {
     }
 }
 
-export { pollPost, pollGet };
+async function pollGetChoice(req, res) {
+    const { id } = req.params
+
+    try {
+        const research = await db.collection('poll').findOne({ _id: ObjectId(id) })
+
+        if (!research) {
+            res.status(404).send('Poll not find')
+            return
+        }
+        const response = await db.collection('choice').find({pollId: id}).toArray()
+        res.send(response)
+
+    } catch (error) {
+        res.sendStatus(500);
+    }
+}
+
+export { pollPost, pollGet, pollGetChoice };
